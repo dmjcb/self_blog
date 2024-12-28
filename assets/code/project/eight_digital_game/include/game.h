@@ -10,7 +10,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "include/State.h"
+#include "include/state.h"
 
 #include <vector>
 #include <iostream>

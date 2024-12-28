@@ -11,7 +11,7 @@
 #define MAINWINDOW_H
 
 #include "ui_MainWindow.h"
-#include "include/Game.h"
+#include "include/game.h"
 
 #include <QMainWindow>
 #include <QLineEdit>

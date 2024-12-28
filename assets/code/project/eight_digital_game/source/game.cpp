@@ -1,4 +1,4 @@
-#include "include/Game.h"
+#include "include/game.h"
 
 Game::Game(std::string startConfiguration, std::string endConfiguration)
 {

@@ -8,7 +8,7 @@
  * @LastEditTime: 2024-07-19 18:04:00
  */
 
-#include "include/State.h"
+#include "include/state.h"
 
 State::State(std::string node, std::string fatherNode, int g, int h)
 {
