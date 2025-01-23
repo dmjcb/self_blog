@@ -59,6 +59,7 @@ class AutoUploadBlog:
         self.git = AutoGit()
 
         self.path = LinuxPath() if platform.system() == "Linux" else WindowsPath()
+        self._SEPARAROR = '/' if platform.system() == "Linux" else "\\"
 
         self._ROOT           = self.path.ROOT
         self._BLOG_DIR       = self.path.BLOG_DIR
@@ -103,12 +104,7 @@ class AutoUploadBlog:
 
         def get_used_images_ap(project_folder):
             def get_ap(image_name):
-                f = ""
-                if platform.system() == "Linux":
-                    f = '/'
-                else:
-                    f = "\\"
-                return "{0}{1}{2}".format(self._BLOG_ASSETS_IMAGE_DIR, f, image_name)
+                return "{0}{1}{2}".format(self._BLOG_ASSETS_IMAGE_DIR, self._SEPARAROR, image_name)
 
             def extract_image_ap(md_file):
                 aps = []
@@ -149,7 +145,7 @@ class AutoUploadBlog:
 
         count = self.clean_unused_images()
 
-        assets_dir = "{0}{1}assets".format(self._BLOG_DIR, '/' if platform.system() == "Linux" else "\\")
+        assets_dir = "{0}{1}assets".format(self._BLOG_DIR, self._SEPARAROR)
         if self.is_exist_modify(assets_dir):
             print("更新self_assets")
 
@@ -184,12 +180,12 @@ class AutoUploadBlog:
         
         print("更新dmjcb.github.io项目")
         src_dir = self._BLOG_DIR   
-        des_dir =  "{0}\\_posts".format(self._JEKYLL_DIR)
+        des_dir =  "{0}{1}_posts".format(self._JEKYLL_DIR, self._SEPARAROR)
         copy_with_ignore_git(src_dir, des_dir)
 
         # 拷贝静态资源
-        src_dir = "{0}\\assets\\image".format(self._BLOG_DIR)
-        des_dir = "{0}\\assets\\image".format(self._JEKYLL_DIR)
+        src_dir = "{0}{1}assets{1}image".format(self._BLOG_DIR, self._SEPARAROR)
+        des_dir = "{0}{1}assets{1}image".format(self._JEKYLL_DIR, self._SEPARAROR)
         copy_with_ignore_git(src_dir, des_dir)
 
         self.git.push(self._JEKYLL_DIR, msg)
