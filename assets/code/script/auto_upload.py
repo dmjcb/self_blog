@@ -35,39 +35,22 @@ class AutoGit:
         self.run_cmd("git clone {0} .".format(address))
 
 
-class WindowsPath:
-    ROOT           = "c:\\Users\\dmjcb\\Documents\\code"
-    BLOG_DIR       = "{0}\\self_blog".format(ROOT)
-    JEKYLL_DIR     = "{0}\\dmjcb.github.io".format(ROOT)
-    ASSETS_DIR     = "{0}\\self_assets".format(ROOT)
-    ASSETS_PUBLIC  = "assets\\public"
-
-    BLOG_ASSETS_IMAGE_DIR= "{0}\\assets\\image".format(BLOG_DIR)
-
-class LinuxPath:
-    ROOT           = "/home/dmjcb/code"
-    BLOG_DIR       = "{0}/self_blog".format(ROOT)
-    JEKYLL_DIR     = "{0}/dmjcb.github.io".format(ROOT)
-    ASSETS_DIR     = "{0}/self_assets".format(ROOT)
-    ASSETS_PUBLIC  = "assets/public"
-
-    BLOG_ASSETS_IMAGE_DIR= "{0}/assets/image".format(BLOG_DIR)
-
-
 class AutoUploadBlog:
     def __init__(self):
         self.git = AutoGit()
 
-        self.path = LinuxPath() if platform.system() == "Linux" else WindowsPath()
         self._SEPARAROR = '/' if platform.system() == "Linux" else "\\"
 
-        self._ROOT           = self.path.ROOT
-        self._BLOG_DIR       = self.path.BLOG_DIR
-        self._JEKYLL_DIR     = self.path.JEKYLL_DIR
-        self._ASSETS_DIR     = self.path.ASSETS_DIR
-        self._ASSETS_PUBLIC  = self.path.ASSETS_PUBLIC
+        self._WINDOWS_ROOT = "c:\\Users\\dmjcb\\Documents\\code"
+        self._LINUX_ROOT   = "/home/dmjcb/code"
+        
+        self._ROOT           = self._LINUX_ROOT if platform.system() == "Linux" else self._WINDOWS_ROOT
+        self._BLOG_DIR       = "{0}{1}self_blog".format(self._ROOT, self._SEPARAROR)
+        self._JEKYLL_DIR     = "{0}{1}dmjcb.github.io".format(self._ROOT, self._SEPARAROR)
+        self._ASSETS_DIR     = "{0}{1}self_assets".format(self._ROOT, self._SEPARAROR)
+        self._ASSETS_PUBLIC  = "assets{0}public".format(self._SEPARAROR)
 
-        self._BLOG_ASSETS_IMAGE_DIR= self.path.BLOG_ASSETS_IMAGE_DIR
+        self._BLOG_ASSETS_IMAGE_DIR= "{0}{1}assets{1}image".format(self._BLOG_DIR, self._SEPARAROR)
 
         self._URL            = "https://dmjcb.github.io"
         self._BLOG_PROJECT   = "git@github.com:dmjcb/self_blog.git"
@@ -103,8 +86,8 @@ class AutoUploadBlog:
             return aps  
 
         def get_used_images_ap(project_folder):
-            def get_ap(image_name):
-                return "{0}{1}{2}".format(self._BLOG_ASSETS_IMAGE_DIR, self._SEPARAROR, image_name)
+            def get_ap(name):
+                return "{0}{1}{2}".format(self._BLOG_ASSETS_IMAGE_DIR, self._SEPARAROR, name)
 
             def extract_image_ap(md_file):
                 aps = []
@@ -238,7 +221,7 @@ class AutoUploadBlog:
             new_text.append(text)
 
         title = lines[1].replace("/r", "").replace("/n", "").split(":")[-1]
-        path = "{0}\\{1}\\{2}.md".format(self._BLOG_DIR, self._ASSETS_PUBLIC, title[2:-2])
+        path = "{0}{3}{1}{3}{2}.md".format(self._BLOG_DIR, self._ASSETS_PUBLIC, title[2:-2], self._SEPARAROR)
         with open(path, 'w', encoding='utf-8') as f:
             f.writelines(new_text)
 
