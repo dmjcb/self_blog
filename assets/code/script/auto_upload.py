@@ -74,7 +74,6 @@ class AutoUploadBlog:
         self._ASSETS_PROJECT  = "git@github.com:dmjcb/self_assets.git"
 
     
-
     def clone_project(self):
         for url in (self._BLOG_PROJECT, self._JEKYLL_PROJECT, self._ASSETS_PROJECT):
             self.git.clone(self._ROOT, url)
@@ -95,7 +94,7 @@ class AutoUploadBlog:
     def clean_unused_images(self):
         def extract_files_ap(folder):
             aps = []
-            for path, dirs, fs in os.walk(folder):
+            for path, _, fs in os.walk(folder):
                 if ".git" in path or "public" in path:
                     continue
                 for f in fs:
@@ -104,7 +103,12 @@ class AutoUploadBlog:
 
         def get_used_images_ap(project_folder):
             def get_ap(image_name):
-                return "{0}\\{1}".format(self._BLOG_ASSETS_IMAGE_DIR, image_name)
+                f = ""
+                if platform.system() == "Linux":
+                    f = '/'
+                else:
+                    f = "\\"
+                return "{0}{1}{2}".format(self._BLOG_ASSETS_IMAGE_DIR, f, image_name)
 
             def extract_image_ap(md_file):
                 aps = []
@@ -113,7 +117,10 @@ class AutoUploadBlog:
                         line = line.replace("\r\n", "")
                         # example: ![](/assets/image/20241022204809.png)
                         if "/assets/image/" in line:
+                            if '\n' in line:
+                                line = line.replace('\n', '')
                             name = line.split('/')[-1][:-1]
+                            
                             aps.append(get_ap(name))
                 return aps
 
@@ -127,7 +134,6 @@ class AutoUploadBlog:
     
         used_images_ap = get_used_images_ap(self._BLOG_DIR)
         now_images_ap = extract_files_ap(self._BLOG_ASSETS_IMAGE_DIR)
-
         count = 0
         for ap in now_images_ap:
             if ap not in used_images_ap:
@@ -143,7 +149,7 @@ class AutoUploadBlog:
 
         count = self.clean_unused_images()
 
-        assets_dir = "{0}\\assets".format(self._BLOG_DIR)
+        assets_dir = "{0}{1}assets".format(self._BLOG_DIR, '/' if platform.system() == "Linux" else "\\")
         if self.is_exist_modify(assets_dir):
             print("更新self_assets")
 
