@@ -160,7 +160,7 @@ class AutoUploadBlog:
         
         print("更新dmjcb.github.io项目")
 
-        copy_with_ignore_git(self._BLOG_DIR, os.sep.join(self._JEKYLL_DIR, "_posts"))
+        copy_with_ignore_git(self._BLOG_DIR, os.sep.join([self._JEKYLL_DIR, "_posts"]))
 
         # 拷贝静态资源
         src_dir = os.sep.join([self._BLOG_DIR, "assets", "image"])
